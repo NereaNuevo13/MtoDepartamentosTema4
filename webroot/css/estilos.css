@@ -1,0 +1,49 @@
+body, form{
+    background-color: seashell;
+}
+
+.error{
+    color: red;
+    font-weight: bold;
+}
+
+legend{
+    color: black;
+    font-weight: bold;
+}
+
+input{
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.obligatorio input{
+    background-color: #ccc;
+}
+
+input[type = submit]{
+    background-color: white;
+}
+
+fieldset{
+    width: 20%;
+    padding: 20px;
+    border: 2px solid black;
+}
+
+td{
+    padding: 10px;
+    width: 20%;
+}
+
+th{
+    font-size: 1.3em;
+}
+
+.volumen{
+    text-align: center;
+}
+
+.acciones{
+    float: right;
+}

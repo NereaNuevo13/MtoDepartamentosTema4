@@ -1,63 +1,53 @@
+
+<?php
+
+if (isset($_POST["exportar"])) {
+    header('Location: exportarDepartamentos.php');
+}
+
+if (isset($_POST["improtar"])) {
+    header('Location: improtarDepartamentos.php');
+}
+
+if (isset($_POST["añadir"])) {
+    header('Location: altaDepartamentos.php');
+}
+
+if (isset($_POST["volver"])) {
+    header('Location: ../../../proyectos.html');
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Ejercicio 04 - Nerea Nuevo Pascual</title>
-        <meta name="author" content="Luis Mateo Rivera Uriarte">
-        <meta name="date" content="08-10-2019">
-        <link rel="stylesheet" type="text/css" href="../webroot/css/styles.css" media="screen">
-        <link rel="icon" type="image/png" href="../../../mifavicon.png">
-        <style>
-            .error{
-                color: red;
-                font-weight: bold;
-            }
-            
-            legend{
-                color: black;
-                font-weight: bold;
-            }
-            input{
-                padding: 5px;
-                border-radius: 10px;
-            }
-            .obligatorio input{
-                background-color: #ccc;
-            }
-            
-            fieldset{
-                width: 20%;
-                padding: 20px;
-            }
-            
-            td{
-                padding: 10px;
-            }
-            
-            th{
-                font-size: 1.3em;
-            }
-            
-            .volumen{
-                text-align: center;
-            }
-        </style>
+        <title>Mto Departamentos Tema 4</title>
+        <link rel="stylesheet" type="text/css" href="../webroot/css/estilos.css" media="screen">
+        <script src="../mostrarCodigo/script.js"></script>
     </head>
     <body>  
-        <h2>Nerea Nuevo Pascual</h2>
+        <h2>Mto Departamentos - Nerea Nuevo</h2>
         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-            <fieldset>
-                <legend>DAW214_DB_Departamentos</legend>
+            <fieldset id="bodi">
                 <div class="obligatorio">
-                    <label>Descripción Departamento</label>
+                    <div class="acciones">
+                        <input type="submit" name="exportar" value="Exportar">
+                        <input type="submit" name="importar" value="Importar">
+                        <input type="submit" name="añadir" value="Añadir">
+                    </div>
+                    <br><br><br>
+                    <label>Descripción</label>
                     <input type = "text" name = "DescDepartamento"
-                           value="<?php if (isset($_POST['DescDepartamento'])){ echo $_POST['DescDepartamento'];} ?>"><br>
-                </div>
-                <br>
-                <div>
-                    <input type="submit" name="enviar" value="Buscar">
+                           value="<?php if (isset($_POST['DescDepartamento'])){ echo $_POST['DescDepartamento'];} ?>">
+                    <div class="acciones">
+                        <input type="submit" name="enviar" value="Buscar">
+                    </div>
                 </div>
             </fieldset>
+            <br>
+            <input type="submit" name="volver" value="Volver">
         </form>
         <?php
         /**
@@ -65,7 +55,7 @@
           @since 28/10/2020
          */
         require_once '../core/201020validacionFormularios.php'; //Importamos la libreria de validacion
-        require_once '../configDB/confDB.php'; //Configuracion de la base de datos
+        require_once '../config/confDB.php'; //Configuracion de la base de datos
 
         //Inicializamos un array que se encargara de recoger los datos del formulario(Campos vacios)
         $arrayFormulario = [
@@ -96,7 +86,7 @@
                     echo "</tr>";
                     while ($registro = $sentenciaSQL->fetchObject()) { //Al realizar el fetchObject, se pueden sacar los datos de $registro como si fuera un objeto
                         echo "<tr>";
-                        echo "<td>$registro->CodDepartamento</td>";
+                        echo "<td class='volumen'>$registro->CodDepartamento</td>";
                         echo "<td>$registro->DescDepartamento</td>";
                         echo "<td class='volumen'>$registro->VolumenNegocio</td>";
                         echo "</tr>";
