@@ -13,7 +13,7 @@ if (isset($_POST["cancelar"])) {
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Ejercicio 03 - Nerea Nuevo Pascual</title>
+        <title>Mto Departamentos Tema 4</title>
         <link rel="stylesheet" type="text/css" href="../webroot/css/estilos.css" media="screen">
     </head>
     <body>  
