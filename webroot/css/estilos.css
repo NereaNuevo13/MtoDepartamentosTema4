@@ -17,26 +17,56 @@ input{
     border-radius: 10px;
 }
 
-.obligatorio input{
-    background-color: #ccc;
-}
 
 input[type = submit]{
-    background-color: white;
+    border: 2px solid black;
+    padding: .375rem .75rem;
+    border-radius: .25rem;
+    background-color: #E7E7E7;
+    cursor: pointer;
+    transition: background-color .15s ease-in-out;
 }
+
+input[type = submit]:hover, input[type = submit]:focus {
+  color: white;
+  background-color: black;
+}
+
 
 fieldset{
     width: 20%;
     padding: 20px;
     border: 2px solid black;
+    margin: 0 auto;
+}
+
+form{
+    margin-bottom: 50px;
+}
+
+h2{
+    background-color: black;
+    padding: 10px;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: white;
+}
+
+table{
+    border: 2px solid black;
+    border-collapse: collapse;
+    margin: 0 auto;
 }
 
 td{
     padding: 10px;
     width: 20%;
+    border: 2px solid black;
 }
 
 th{
+    border: 2px solid black;
     font-size: 1.3em;
 }
 
@@ -46,4 +76,20 @@ th{
 
 .acciones{
     float: right;
+}
+
+.emojis{
+    text-align: center;
+}
+
+footer{
+    padding: 15px;
+    font-weight: bold;
+    width: 97%;
+    position: fixed;
+    text-align: center;
+    left: 10px;
+    bottom: 10px;
+    background-color: black;
+    color: white;
 }

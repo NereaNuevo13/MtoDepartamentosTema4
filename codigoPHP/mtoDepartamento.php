@@ -1,22 +1,20 @@
 
 <?php
-
 if (isset($_POST["exportar"])) {
-    header('Location: exportarDepartamentos.php');
+    header('Location: exportarDepartamento.php');
 }
 
-if (isset($_POST["improtar"])) {
-    header('Location: improtarDepartamentos.php');
+if (isset($_POST["importar"])) {
+    header('Location: importarDepartamento.php');
 }
 
 if (isset($_POST["añadir"])) {
-    header('Location: altaDepartamentos.php');
+    header('Location: insertarDepartamento.php');
 }
 
 if (isset($_POST["volver"])) {
     header('Location: ../../../proyectos.html');
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -29,26 +27,27 @@ if (isset($_POST["volver"])) {
     </head>
     <body>  
         <h2>Mto Departamentos - Nerea Nuevo</h2>
-        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-            <fieldset id="bodi">
-                <div class="obligatorio">
-                    <div class="acciones">
-                        <input type="submit" name="exportar" value="Exportar">
-                        <input type="submit" name="importar" value="Importar">
-                        <input type="submit" name="añadir" value="Añadir">
+        <div class="formulario">
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                <fieldset id="bodi">
+                    <div class="obligatorio">
+                        <div class="acciones">
+                            <input type="submit" name="exportar" value="Exportar">
+                            <input type="submit" name="importar" value="Importar">
+                            <input type="submit" name="añadir" value="Añadir">
+                        </div>
+                        <br><br><br>
+                        <label>Descripción</label>
+                        <input type = "text" name = "DescDepartamento"
+                               value="<?php if (isset($_POST['DescDepartamento'])) {echo $_POST['DescDepartamento'];} ?>">
+                        <div class="acciones">
+                            <input type="submit" name="enviar" value="Buscar">
+                        </div>
                     </div>
-                    <br><br><br>
-                    <label>Descripción</label>
-                    <input type = "text" name = "DescDepartamento"
-                           value="<?php if (isset($_POST['DescDepartamento'])){ echo $_POST['DescDepartamento'];} ?>">
-                    <div class="acciones">
-                        <input type="submit" name="enviar" value="Buscar">
-                    </div>
-                </div>
-            </fieldset>
-            <br>
-            <input type="submit" name="volver" value="Volver">
-        </form>
+                    <br><input type="submit" name="volver" value="Volver">
+                </fieldset>
+            </form>
+        </div>
         <?php
         /**
           @author Nerea Nuevo Pascual
@@ -56,7 +55,6 @@ if (isset($_POST["volver"])) {
          */
         require_once '../core/201020validacionFormularios.php'; //Importamos la libreria de validacion
         require_once '../config/confDB.php'; //Configuracion de la base de datos
-
         //Inicializamos un array que se encargara de recoger los datos del formulario(Campos vacios)
         $arrayFormulario = [
             'DescDepartamento' => null,
@@ -83,12 +81,18 @@ if (isset($_POST["volver"])) {
                     echo "<th>Codigo</th>";
                     echo "<th>Descripción</th>";
                     echo "<th>Volumen de Negocio</th>";
+                    echo "<th>Opciones</th>";
                     echo "</tr>";
                     while ($registro = $sentenciaSQL->fetchObject()) { //Al realizar el fetchObject, se pueden sacar los datos de $registro como si fuera un objeto
                         echo "<tr>";
                         echo "<td class='volumen'>$registro->CodDepartamento</td>";
                         echo "<td>$registro->DescDepartamento</td>";
                         echo "<td class='volumen'>$registro->VolumenNegocio</td>";
+                        echo "<td class='emojis'>";
+                        echo "<img src='../webroot/images/ver.png' width='30' heigth='30'>";
+                        echo "<img src='../webroot/images/editar.png' width='30' heigth='30'>";
+                        echo "<img src='../webroot/images/borrar.png' width='30' heigth='30'>";
+                        echo "</td>";
                         echo "</tr>";
                     }
                     echo "</table>";
@@ -102,5 +106,6 @@ if (isset($_POST["volver"])) {
             unset($miDB);
         }
         ?>
+        <footer>&copy; Nerea Nuevo Pascual<a href="https://github.com/NereaNuevo13/MtoDepartamentosTema4/tree/developer" target="_blank"><img src="../webroot/images/github.png" width="40" height="40"></a></footer>
     </body>
 </html>
