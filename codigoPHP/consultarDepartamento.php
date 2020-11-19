@@ -3,6 +3,7 @@
 if (isset($_POST["volver"])) {
     header('Location: mtoDepartamento.php');
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -23,24 +24,16 @@ if (isset($_POST["volver"])) {
             $miDB = new PDO(HOST, USUARIO, PASS);
             $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //errores
             
-            $mostrarSQL = $miDB->query("SELECT * FROM Departamento WHERE CodDepartamento LIKE '" . $_GET['codigo'] . "'"); //realizamos la busqueda
+            $sqlDepartamento = 'Select * FROM Departamento WHERE CodDepartamento LIKE ?'; //Creamos la sentencia sql    
+            $consulta = $miDB->prepare($sqlDepartamento); //preparamos el query
+            if (isset($_GET['codigo'])) {
+                $consulta->bindValue(1, $_GET['codigo']);
+            } else {
+                $consulta->bindValue(1, $_REQUEST['codigo']);
+            }//Añadimos los parametros que necesitamos
+            $consulta->execute(); //Ejecutamos la consulta
+            $resultado = $consulta->fetchObject();
 
-            echo "<table>";
-            echo "<tr>";
-            echo "<th>Codigo</th>";
-            echo "<th>Descripción</th>";
-            echo "<th>Fecha Baja</th>";
-            echo "<th>Volumen de Negocio</th>";
-            echo "</tr>";
-            while ($registro = $mostrarSQL->fetchObject()) { //Al realizar el fetchObject, se pueden sacar los datos de $registro como si fuera un objeto
-                echo "<tr>";
-                echo "<td>$registro->CodDepartamento</td>";
-                echo "<td>$registro->DescDepartamento</td>";
-                echo "<td>$registro->FechaBaja</td>";
-                echo "<td>$registro->VolumenNegocio</td>";
-                echo "</tr>";
-            }
-            echo "</table>";
             
         } catch (PDOException $mensajeError) { //Cuando se produce una excepcion se corta el programa y salta la excepción con el mensaje de error
             echo "<h3>Mensaje de ERROR</h3>";
@@ -50,6 +43,20 @@ if (isset($_POST["volver"])) {
             unset($miDB);
         }
         ?>
+        <form action="<?php echo $_SERVER['PHP_SELF'] ?>" name="Añadirformulario" method="POST">
+            <fieldset>
+                <label for="codigo">Codigo</label>
+                <input type="text" name="codigo2" id="codigo2" disabled="true" value="<?php echo $resultado->CodDepartamento ?>"><br><br>
+                <input type="hidden" name="codigo" id="codigo" value="<?php echo $resultado->CodDepartamento ?>">
+                <label for="descripcion">Descripción</label>
+                <input type="text" name="descripcion" id="descripcion" disabled="true" value="<?php echo $resultado->DescDepartamento ?>"><br><br>
+                <label for="fecha">Fecha de baja</label>
+                <input type="text" name="fecha" id="fecha" disabled="true" value="<?php echo $resultado->FechaBaja?>"><br><br>
+                <label for="volumen">Ventas</label>
+                <input type="text" name="volumen" id="volumen" disabled="true" value="<?php echo $resultado->VolumenNegocio ?>"><br><br>
+                <input type="submit" value="Volver" name="volver">
+            </fieldset>
+        </form>
          <footer>&copy; Nerea Nuevo Pascual<a href="https://github.com/NereaNuevo13/MtoDepartamentosTema4/tree/developer" target="_blank"><img src="../webroot/images/github.png" width="40" height="40"></a></footer>
     </body>
 </html>
