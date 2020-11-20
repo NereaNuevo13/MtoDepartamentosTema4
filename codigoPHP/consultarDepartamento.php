@@ -24,7 +24,7 @@ if (isset($_POST["volver"])) {
             $miDB = new PDO(HOST, USUARIO, PASS);
             $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //errores
             
-            $sqlDepartamento = 'Select * FROM Departamento WHERE CodDepartamento LIKE ?'; //Creamos la sentencia sql    
+            $sqlDepartamento = 'Select * FROM Departamento WHERE CodDepartamento = ?'; //Creamos la sentencia sql    
             $consulta = $miDB->prepare($sqlDepartamento); //preparamos el query
             if (isset($_GET['codigo'])) {
                 $consulta->bindValue(1, $_GET['codigo']);
@@ -57,6 +57,6 @@ if (isset($_POST["volver"])) {
                 <input type="submit" value="Volver" name="volver">
             </fieldset>
         </form>
-         <footer>&copy; Nerea Nuevo Pascual<a href="https://github.com/NereaNuevo13/MtoDepartamentosTema4/tree/developer" target="_blank"><img src="../webroot/images/github.png" width="40" height="40"></a></footer>
+        <footer>&copy; Nerea Nuevo Pascual<a href="https://github.com/NereaNuevo13/MtoDepartamentosTema4/tree/developer" target="_blank"><img src="../webroot/images/github.png" width="40" height="40"></a></footer>
     </body>
 </html>

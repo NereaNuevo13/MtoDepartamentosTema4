@@ -1,4 +1,3 @@
-
 <?php
 if (isset($_POST["exportar"])) {
     header('Location: exportarDepartamento.php');
@@ -34,12 +33,16 @@ if (isset($_POST["volver"])) {
                         <div class="acciones">
                             <input type="submit" name="exportar" value="Exportar">
                             <input type="submit" name="importar" value="Importar">
-                            <input type="submit" name="añadir" value="Añadir">
+                            <a href ="insertarDepartamento.php"><input type="button" name="añadir" value="Añadir"></a>
                         </div>
                         <br><br><br>
                         <label>Descripción</label>
                         <input type = "text" name = "DescDepartamento"
-                               value="<?php if (isset($_POST['DescDepartamento'])) {echo $_POST['DescDepartamento'];} ?>">
+                               value="<?php
+                               if (isset($_POST['DescDepartamento'])) {
+                                   echo $_POST['DescDepartamento'];
+                               }
+                               ?>">
                         <div class="acciones">
                             <input type="submit" name="enviar" value="Buscar">
                         </div>
@@ -83,15 +86,22 @@ if (isset($_POST["volver"])) {
                 echo "<th>Opciones</th>";
                 echo "</tr>";
                 while ($registro = $sentenciaSQL->fetchObject()) { //Al realizar el fetchObject, se pueden sacar los datos de $registro como si fuera un objeto
+                    $cod = $registro->CodDepartamento;
+                    $fecha = $registro->FechaBaja;
                     echo "<tr>";
                     echo "<td class='volumen'>$registro->CodDepartamento</td>";
                     echo "<td>$registro->DescDepartamento</td>";
                     echo "<td class='volumen'>$registro->FechaBaja</td>";
                     echo "<td class='volumen'>$registro->VolumenNegocio</td>";
                     echo "<td class='emojis'>";
-                    echo "<a href='consultarDepartamento.php?codigo=$registro->CodDepartamento''><img src='../webroot/images/ver.png' width='30' heigth='30'></a>";
+                    echo "<a href='consultarDepartamento.php?codigo=$registro->CodDepartamento'><img src='../webroot/images/ver.png' width='30' heigth='30'></a>";
                     echo "<a href='editarDepartamento.php?codigo=$registro->CodDepartamento'><img src='../webroot/images/editar.png' width='30' heigth='30'></a>";
                     echo "<a href='borrarDepartamento.php?codigo=$registro->CodDepartamento'><img src='../webroot/images/borrar.png' width='30' heigth='30'></a>";
+                    if ($fecha == NULL) {
+                        echo "<a href='bajaLogicaDepartamento.php?codigo=$registro->CodDepartamento'><img src='../webroot/images/flechaAbajo.png' width='30' heigth='30'></a>";
+                    } else {
+                        echo "<a href='altaLogicaDepartamento.php?codigo=$registro->CodDepartamento'><img src='../webroot/images/flechaArriba.png' width='30' heigth='30'></a>";
+                    }
                     echo "</td>";
                     echo "</tr>";
                 }

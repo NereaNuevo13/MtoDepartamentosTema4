@@ -1,8 +1,4 @@
-
 <?php
-if (isset($_POST["enviar"])) {
-    header('Location: mtoDepartamento.php');
-}
 
 if (isset($_POST["cancelar"])) {
     header('Location: mtoDepartamento.php');
@@ -101,6 +97,8 @@ if (isset($_POST["cancelar"])) {
             $sentenciaSQL->bindParam(":descripcion", $arrayFormulario['DescDepartamento']);
             $sentenciaSQL->bindParam(":volumen", $arrayFormulario['VolumenNegocio']);
             $sentenciaSQL->execute();
+            
+            header('Location: mtoDepartamento.php');
 
         } catch (PDOException $mensajeError) { //Cuando se produce una excepcion se corta el programa y salta la excepción con el mensaje de error
             echo "<h4>Se ha producido un error. Disculpe las molestias</h4>";
