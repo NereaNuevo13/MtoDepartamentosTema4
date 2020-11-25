@@ -32,18 +32,18 @@ if (isset($_POST["cancelar"])) {
             unset($miDB);
         }
 
-        if (isset($_POST['aceptar'])) {
+        if (isset($_REQUEST["aceptar"])) {
             try {
                 // Datos de la conexión a la base de datos
                 $miDB = new PDO(HOST, USUARIO, PASS);
                 $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //Cómo capturar las excepciones y muestre los errores
                 //Crear el departamento en la base de datos    
-                $sqlDepartamento = "DELETE FROM Departamento WHERE CodDepartamento = :codigo"; //Los : que van delante, es para indicar que sera una consulta preparada
-                $consulta = $miDB->prepare($sqlDepartamento);
-                $consulta->bindParam(":codigo", $_GET['codigo']);
+                $consultaCodigo = "SELECT * FROM Departamento WHERE CodDepartamento = :codigo";
+                $consulta = $miDB->prepare($consultaCodigo);
+                $consulta->bindParam(':codigo', $_GET["codigo"]);
                 $consulta->execute();
 
-                Header('Location: mtoDepartamento.php');
+                header("Location: mtoDepartamento.php");
             } catch (PDOException $mensajeError) { //Cuando se produce una excepcion se corta el programa y salta la excepción con el mensaje de error
                 echo "<h3>Mensaje de ERROR</h3>";
                 echo "Error: " . $mensajeError->getMessage() . "<br>";

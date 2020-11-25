@@ -18,7 +18,7 @@ input{
 }
 
 
-input[type = submit]{
+input[type = submit], input[type = button]{
     border: 2px solid black;
     padding: .375rem .75rem;
     border-radius: .25rem;
@@ -27,7 +27,7 @@ input[type = submit]{
     transition: background-color .15s ease-in-out;
 }
 
-input[type = submit]:hover, input[type = submit]:focus {
+input[type = submit]:hover, input[type = submit]:focus, input[type = button]:hover, input[type = button]:focus {
   color: white;
   background-color: black;
 }
