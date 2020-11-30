@@ -1,108 +1,111 @@
+<?php
+if (isset($_POST["exportar"])) {
+    header('Location: exportarDepartamento.php');
+}
+
+if (isset($_POST["importar"])) {
+    header('Location: importarDepartamento.php');
+}
+
+if (isset($_POST["añadir"])) {
+    header('Location: insertarDepartamento.php');
+}
+
+if (isset($_POST["volver"])) {
+    header('Location: ../../../proyectos.html');
+}
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Ejercicio 04 - Nerea Nuevo Pascual</title>
-        <meta name="author" content="Luis Mateo Rivera Uriarte">
-        <meta name="date" content="08-10-2019">
-        <link rel="stylesheet" type="text/css" href="../webroot/css/styles.css" media="screen">
-        <link rel="icon" type="image/png" href="../../../mifavicon.png">
-        <style>
-            .error{
-                color: red;
-                font-weight: bold;
-            }
-            
-            legend{
-                color: black;
-                font-weight: bold;
-            }
-            input{
-                padding: 5px;
-                border-radius: 10px;
-            }
-            .obligatorio input{
-                background-color: #ccc;
-            }
-            
-            fieldset{
-                width: 20%;
-                padding: 20px;
-            }
-            
-            td{
-                padding: 10px;
-            }
-            
-            th{
-                font-size: 1.3em;
-            }
-            
-            .volumen{
-                text-align: center;
-            }
-        </style>
+        <title>Mto Departamentos Tema 4</title>
+        <link rel="stylesheet" type="text/css" href="../webroot/css/estilos.css" media="screen">
+        <script src="../mostrarCodigo/script.js"></script>
     </head>
     <body>  
-        <h2>Nerea Nuevo Pascual</h2>
-        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-            <fieldset>
-                <legend>DAW214_DB_Departamentos</legend>
-                <div class="obligatorio">
-                    <label>Descripción Departamento</label>
-                    <input type = "text" name = "DescDepartamento"
-                           value="<?php if (isset($_POST['DescDepartamento'])){ echo $_POST['DescDepartamento'];} ?>"><br>
-                </div>
-                <br>
-                <div>
-                    <input type="submit" name="enviar" value="Buscar">
-                </div>
-            </fieldset>
-        </form>
+        <h2>Mto Departamentos - Nerea Nuevo<a hreF="../../../../proyectos.html"><img src="../webroot/images/volver.png" width="70" height="40" align = "right"></a></h2>
+        <div class="formulario">
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                <fieldset id="bodi">
+                    <div class="obligatorio">
+                        <div class="acciones">
+                            <input type="submit" name="exportar" value="Exportar">
+                            <input type="submit" name="importar" value="Importar">
+                            <a href ="insertarDepartamento.php"><input type="button" name="añadir" value="Añadir"></a>
+                        </div>
+                        <br><br><br>
+                        <label>Descripción</label>
+                        <input type = "text" name = "DescDepartamento"
+                               value="<?php
+                               if (isset($_POST['DescDepartamento'])) {
+                                   echo $_POST['DescDepartamento'];
+                               }
+                               ?>">
+                        <div class="acciones">
+                            <input type="submit" name="enviar" value="Buscar">
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
         <?php
         /**
           @author Nerea Nuevo Pascual
           @since 28/10/2020
          */
         require_once '../core/201020validacionFormularios.php'; //Importamos la libreria de validacion
-        require_once '../configDB/confDB.php'; //Configuracion de la base de datos
-
+        require_once '../config/confDB.php'; //Configuracion de la base de datos
         //Inicializamos un array que se encargara de recoger los datos del formulario(Campos vacios)
-        $arrayFormulario = [
-            'DescDepartamento' => null,
-        ];
 
         try {
             // Datos de la conexión a la base de datos
             $miDB = new PDO(HOST, USUARIO, PASS);
             $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //Cómo capturar las excepciones y muestre los errores
-            if (isset($_POST['enviar'])) {
 
-                $arrayFormulario['DescDepartamento'] = $_POST['DescDepartamento'];
+            $descripcionBuscada = "";
+            if (isset($_POST['DescDepartamento'])) {
+                $descripcionBuscada = $_POST['DescDepartamento'];
+            }
 
-                $sentenciaSQL = $miDB->prepare('SELECT * FROM Departamento WHERE DescDepartamento LIKE ("%":descripcion"%")'); //Consulta SQL que queremos mostrar
-                $sentenciaSQL->bindParam(":descripcion", $arrayFormulario['DescDepartamento']);
-                $sentenciaSQL->execute(); //Ejecutamos la sentencia
-                echo "<br>";
+            $sql = 'SELECT * FROM Departamento WHERE DescDepartamento LIKE "%":DescDepartamento"%"';
+            $sentenciaSQL = $miDB->prepare($sql); // preparo la consulta
+            $parametros = [":DescDepartamento" => $descripcionBuscada];
+            $sentenciaSQL->execute($parametros); // ejecuto la consulta con los paremtros del array de parametros
 
-                if ($sentenciaSQL->rowCount() == 0) {
-                    echo "<h3>No se ha encontrado ningun departamento con esa descripción</h3>";
-                } else {
-                    echo "<table border='0'>";
+            if ($sentenciaSQL->rowCount() == 0) {
+                echo "<h3>No se ha encontrado ningun departamento con esa descripción</h3>";
+            } else {
+                echo "<table border='0'>";
+                echo "<tr>";
+                echo "<th>Codigo</th>";
+                echo "<th>Descripción</th>";
+                echo "<th>Fecha Baja</th>";
+                echo "<th>Volumen de Negocio</th>";
+                echo "<th>Opciones</th>";
+                echo "</tr>";
+                while ($registro = $sentenciaSQL->fetchObject()) { //Al realizar el fetchObject, se pueden sacar los datos de $registro como si fuera un objeto
+                    $cod = $registro->CodDepartamento;
+                    $fecha = $registro->FechaBaja;
                     echo "<tr>";
-                    echo "<th>Codigo</th>";
-                    echo "<th>Descripción</th>";
-                    echo "<th>Volumen de Negocio</th>";
-                    echo "</tr>";
-                    while ($registro = $sentenciaSQL->fetchObject()) { //Al realizar el fetchObject, se pueden sacar los datos de $registro como si fuera un objeto
-                        echo "<tr>";
-                        echo "<td>$registro->CodDepartamento</td>";
-                        echo "<td>$registro->DescDepartamento</td>";
-                        echo "<td class='volumen'>$registro->VolumenNegocio</td>";
-                        echo "</tr>";
+                    echo "<td class='volumen'>$registro->CodDepartamento</td>";
+                    echo "<td>$registro->DescDepartamento</td>";
+                    echo "<td class='volumen'>$registro->FechaBaja</td>";
+                    echo "<td class='volumen'>$registro->VolumenNegocio</td>";
+                    echo "<td class='emojis'>";
+                    echo "<a href='consultarDepartamento.php?codigo=$registro->CodDepartamento'><img src='../webroot/images/ver.png' width='30' heigth='30'></a>";
+                    echo "<a href='editarDepartamento.php?codigo=$registro->CodDepartamento'><img src='../webroot/images/editar.png' width='30' heigth='30'></a>";
+                    echo "<a href='borrarDepartamento.php?codigo=$registro->CodDepartamento'><img src='../webroot/images/borrar.png' width='30' heigth='30'></a>";
+                    if ($fecha == NULL) {
+                        echo "<a href='bajaLogicaDepartamento.php?codigo=$registro->CodDepartamento'><img src='../webroot/images/flechaAbajo.png' width='30' heigth='30'></a>";
+                    } else {
+                        echo "<a href='altaLogicaDepartamento.php?codigo=$registro->CodDepartamento'><img src='../webroot/images/flechaArriba.png' width='30' heigth='30'></a>";
                     }
-                    echo "</table>";
+                    echo "</td>";
+                    echo "</tr>";
                 }
+                echo "</table>";
             }
         } catch (PDOException $mensajeError) { //Cuando se produce una excepcion se corta el programa y salta la excepción con el mensaje de error
             echo "<h3>Mensaje de ERROR</h3>";
@@ -112,5 +115,6 @@
             unset($miDB);
         }
         ?>
+        <footer>&copy; Nerea Nuevo Pascual<a href="https://github.com/NereaNuevo13/MtoDepartamentosTema4/tree/developer" target="_blank"><img src="../webroot/images/github.png" width="40" height="40"></a></footer>
     </body>
 </html>
