@@ -1,4 +1,8 @@
 <?php
+if (isset($_POST["aceptar"])) {
+    header('Location: mtoDepartamento.php');
+}
+
 if (isset($_POST["cancelar"])) {
     header('Location: mtoDepartamento.php');
 }
@@ -17,58 +21,51 @@ if (isset($_POST["cancelar"])) {
         require_once '../core/201020validacionFormularios.php'; //Importamos la libreria de validacion
         require_once ('../config/confDB.php'); //Configuracion de la base de datos
 
+
+
         try {
-            $miDB = new PDO(HOST, USUARIO, PASS);
-            $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $consultaCodigo = "SELECT * FROM Departamento WHERE CodDepartamento = :codigo";
-            $consulta = $miDB->prepare($consultaCodigo);
-            $consulta->bindParam(':codigo', $_GET["codigo"]);
-            $consulta->execute();
-            $resultado = $consulta->fetchObject();
-        } catch (PDOException $exc) {
-            echo $exc->getMessage();
-            echo "Error al conectar " . "<br>";
-        } finally {
-            unset($miDB);
-        }
+            $miBD = new PDO(HOST, USUARIO, PASS);
+            $miBD->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        if (isset($_REQUEST["aceptar"])) {
-            try {
-                // Datos de la conexión a la base de datos
-                $miDB = new PDO(HOST, USUARIO, PASS);
-                $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //Cómo capturar las excepciones y muestre los errores
-                //Crear el departamento en la base de datos    
-                $consultaCodigo = "SELECT * FROM Departamento WHERE CodDepartamento = :codigo";
-                $consulta = $miDB->prepare($consultaCodigo);
-                $consulta->bindParam(':codigo', $_GET["codigo"]);
-                $consulta->execute();
-
-                header("Location: mtoDepartamento.php");
-            } catch (PDOException $mensajeError) { //Cuando se produce una excepcion se corta el programa y salta la excepción con el mensaje de error
-                echo "<h3>Mensaje de ERROR</h3>";
-                echo "Error: " . $mensajeError->getMessage() . "<br>";
-                echo "Código de error: " . $mensajeError->getCode();
-            } finally {
-                unset($miDB);
+            if (isset($_POST['aceptar'])) {
+                $sql = "DELETE FROM Departamento WHERE CodDepartamento LIKE '" . $_REQUEST['codigo'] . "'"; //Los : que van delante, es para indicar que sera una consulta preparada
+                $consultaBorrar = $miBD->prepare($sql);
+                $consultaBorrar->bindParam(":codigo", $_REQUEST['codigo']);
+                $consultaBorrar->execute();
+            } else {
+                $sql2 = "SELECT * FROM Departamento WHERE CodDepartamento LIKE '" . $_REQUEST['codigo'] . "'";
+                $consultaSelect = $miBD->prepare($sql2);
+                $consultaSelect->bindParam(':codigo', $_REQUEST["codigo"]);
+                $consultaSelect->execute();
+                $resultado = $consultaSelect->fetchObject();
             }
+        } catch (PDOException $mensajeError) {
+            echo "Error " . $mensajeError->getMessage() . "<br>";
+            echo "Codigo del error " . $mensajeError->getCode() . "<br>";
+            die();
+        } finally {
+            unset($miBD);
         }
         ?>
-        <form action="<?php echo $_SERVER['PHP_SELF'] ?>" name="Añadirformulario" method="POST">
+
+        <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
             <fieldset>
-                <label for="codigo">Codigo</label>
-                <input type="text" name="codigo2" id="codigo2" disabled="true" value="<?php echo $resultado->CodDepartamento ?>"><br><br>
-                <input type="hidden" name="codigo" id="codigo" disabled="true" value="<?php echo $resultado->CodDepartamento ?>">
-                <label for="descripcion">Descripción</label>
-                <input type="text" name="descripcion" id="descripcion" disabled="true" value="<?php echo $resultado->DescDepartamento ?>"><br><br>
-                <label for="fecha">Fecha de baja</label>
-                <input type="text" name="fecha" id="fecha" disabled="true" value="<?php echo $resultado->FechaBaja ?>"><br><br>
-                <label for="volumen">Ventas</label>
-                <input type="text" name="volumen" id="volumen" disabled="true" value="<?php echo $resultado->VolumenNegocio ?>"><br><br>
-                <input type="submit" value="Eliminar" name="aceptar">
+                <label for="codigo">Código:</label>
+                <input type="text" name="codigo" disabled value="<?php echo $resultado->CodDepartamento ?>"><br><br>
+                <input type="hidden" name="codigo" value="<?php echo $resultado->CodDepartamento ?>">
+                <label for="descripcion">Descripción:</label>
+                <input type="text" name="descripcion" disabled  value="<?php echo $resultado->DescDepartamento ?>"><br><br>
+                <input type="hidden" name="descripcion" value="<?php echo $resultado->DescDepartamento ?>">
+                <label for="descripcion">Fecha Baja:</label>
+                <input type="text" name="fechaBaja" disabled  value="<?php echo $resultado->DescDepartamento ?>"><br><br>
+                <input type="hidden" name="fechaBaja" value="<?php echo $resultado->DescDepartamento ?>">
+                <label for="volumen">Volumen de negocio:</label>
+                <input type="text" name="volumen" disabled value="<?php echo $resultado->VolumenNegocio ?>"><br><br>
+                <input type="hidden" name="volumen" value="<?php echo $resultado->VolumenNegocio ?>">
+                <input type="submit" value="Aceptar" name="aceptar">
                 <input type="submit" value="Cancelar" name="cancelar">
             </fieldset>
         </form>
-
     </body>
     <footer>&copy; Nerea Nuevo Pascual<a href="https://github.com/NereaNuevo13/MtoDepartamentosTema4/tree/developer" target="_blank"><img src="../webroot/images/github.png" width="40" height="40"></a></footer>
 </html>

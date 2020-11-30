@@ -86,10 +86,10 @@ footer{
     padding: 15px;
     font-weight: bold;
     width: 97%;
-    position: fixed;
+    position: relative;
     text-align: center;
+    margin-top: 20px;
     left: 10px;
-    bottom: 10px;
     background-color: black;
     color: white;
 }
